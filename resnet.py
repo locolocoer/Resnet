@@ -22,7 +22,7 @@ class BasicBlock(nn.Module):
         self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1)
         self.BN2 = nn.BatchNorm2d(planes)
         self.shortcut = nn.Identity()
-        if inplanes != planes:
+        if inplanes != planes or stride != 1:
             if option == 'A':
                 self.shortcut = lambdaLayer(
                     lambda x: F.pad(x[:, :, ::2, ::2], (0, 0, 0, 0, planes // 4, planes // 4), mode="constant",
