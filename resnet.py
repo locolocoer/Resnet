@@ -54,9 +54,9 @@ class BottleNeck(nn.Module):
         super(BottleNeck, self).__init__()
 
 
-class resnet(nn.Module):
+class Resnet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
-        super(resnet, self).__init__()
+        super(Resnet, self).__init__()
         self.in_planes = 16
         self.conv = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1)
         self.bn1 = nn.BatchNorm2d(16)
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     # block = BasicBlock(16, 32, 2)
     x = torch.ones((1, 3, 32, 32))
     # y = block(x)
-    Resnet20 = resnet(BasicBlock, [3, 3, 3])
+    Resnet20 = Resnet(BasicBlock, [3, 3, 3])
     y = Resnet20(x)
     print(y)
     # gap = nn.AdaptiveAvgPool2d((1, 1))
