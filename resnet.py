@@ -3,6 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as  F
 
 
+def init_weight(m):
+    for module in m.modules():
+        if isinstance(module, (nn.Linear, nn.Conv2d)):
+            nn.init.kaiming_normal_(module.weight)
+
+
 class lambdaLayer(nn.Module):
     def __init__(self, lambd):
         super(lambdaLayer, self).__init__()
@@ -42,7 +48,10 @@ class BasicBlock(nn.Module):
 
 
 class BottleNeck(nn.Module):
-    pass
+    expansion = 4
+
+    def __init__(self, in_planes, planes, stride=1):
+        super(BottleNeck, self).__init__()
 
 
 class resnet(nn.Module):
@@ -56,6 +65,7 @@ class resnet(nn.Module):
         self.layer3 = self._make_layer(block, 64, num_blocks[1], stride=2)
         self.GAvaPool = nn.AdaptiveAvgPool2d((1, 1))
         self.linear1 = nn.Linear(64, num_classes)
+        self.apply(init_weight)
 
     def _make_layer(self, block, plane, num_blocks, stride):
         layers = []
@@ -77,12 +87,11 @@ class resnet(nn.Module):
 
 
 if __name__ == "__main__":
-    #block = BasicBlock(16, 32, 2)
+    # block = BasicBlock(16, 32, 2)
     x = torch.ones((1, 3, 32, 32))
-    #y = block(x)
-    #Resnet20 = resnet(BasicBlock, [3, 3, 3])
-    #y=Resnet20(x)
-    #print(y)
-
-    gap=nn.AdaptiveAvgPool2d((1,1))
-    print(gap(x).view(1,-1).size())
+    # y = block(x)
+    Resnet20 = resnet(BasicBlock, [3, 3, 3])
+    y = Resnet20(x)
+    print(y)
+    # gap = nn.AdaptiveAvgPool2d((1, 1))
+    # print(gap(x).view(1, -1).size())
